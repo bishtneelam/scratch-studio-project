@@ -2,6 +2,11 @@
 
 A simple visual coding editor built with React, JavaScript, SVG, and Tailwind CSS. Drag blocks into the workspace to control characters, called sprites.
 
+# Scratch Studio
+
+🔗 **Live demo:** [https://meek-pithivier-9feff3.netlify.app](https://meek-pithivier-9feff3.netlify.app/)
+
+
 ## Run the project
 
 Install Node.js 18 or newer, then run:
