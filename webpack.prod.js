@@ -1,20 +1,22 @@
-const { merge } = require("webpack-merge");
-const common = require("./webpack.common.js");
-const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
+// Tailwind 2 uses NODE_ENV to enable production purging.
+process.env.NODE_ENV = 'production';
+const path = require('path');
+const { merge } = require('webpack-merge');
+const common = require('./webpack.common');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
-process.env["NODE_ENV"] = "production";
-
-module.exports = merge([
-  common,
-  {
-    mode: "production",
-    optimization: {
-      minimize: true,
-      minimizer: [
-        // For webpack@5 you can use the `...` syntax to extend existing minimizers (i.e. `terser-webpack-plugin`), uncomment the next line
-        // `...`,
-        new CssMinimizerPlugin(),
-      ],
-    },
+module.exports = merge(common, {
+  mode: 'production',
+  devtool: false,
+  output: { path: path.resolve(__dirname, 'build'), clean: true },
+  optimization: {
+    minimize: true,
+    minimizer: ['...', new CssMinimizerPlugin()],
   },
-]);
+  plugins: [new CopyWebpackPlugin({ patterns: [{
+    from: path.resolve(__dirname, 'public'),
+    to: '.',
+    globOptions: { ignore: ['**/app.js', '**/app.css', '**/*.LICENSE.txt', '**/icons/**'] },
+  }] })],
+});

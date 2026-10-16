@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "start": "webpack serve --config webpack.dev.js",
-    "build": "webpack --config webpack.prod.js"
+    "build": "webpack --config webpack.prod.js",
+    "test": "node --test tests/*.test.js",
+    "check": "npm test && npm run build"
   },
   "dependencies": {
     "react": "^17.0.2",
@@ -46,5 +48,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "engines": {
+    "node": ">=18"
   }
 }
