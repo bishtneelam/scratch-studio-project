@@ -61,7 +61,7 @@ export default function useEditor() {
         return;
       }
       clearTimers();
-      const initialSprites = playbackSprites(current, Boolean(clickedId));
+      const initialSprites = playbackSprites(current);
       const session = startRuntime(
         initialSprites,
         clickedId

@@ -204,35 +204,34 @@ test("property edits are normalized and cannot overwrite program state", () => {
   assert.deepEqual(sprite.blocks, []);
 });
 
-test("green flag replays collisions repeatedly while clicked stacks use live positions", () => {
+test("green flag runs continue from the current live positions", () => {
   const { startRuntime, tick } = require("../src/lib/runtime");
   let state = reduce(createEditorState(), "LOAD_DEMO", {
     sprites: collisionDemo(),
   });
-  const original = state.sprites;
   for (let run = 0; run < 3; run++) {
     const initialSprites = playbackSprites(state);
-    assert.deepEqual(
-      initialSprites.map((sprite) => sprite.x),
-      [-150, 150],
-    );
-    assert.equal(initialSprites[0].blocks, original[0].blocks);
+    assert.equal(initialSprites, state.sprites);
+    const startPositions = initialSprites.map(({ x, y }) => ({ x, y }));
     const runtime = startRuntime(initialSprites);
     state = reduce(state, "RUN_START", {
       sprites: runtime.sprites,
       initialSprites,
       status: "Running",
     });
+    assert.deepEqual(
+      state.saved.map(({ x, y }) => ({ x, y })),
+      startPositions,
+    );
     let result;
     for (let now = 0; now <= 20000; now += 80) {
       result = tick(runtime, now);
       if (result.done) break;
     }
     assert.equal(result.done, true);
-    assert.equal(result.swaps, 1);
+    if (run === 0) assert.equal(result.swaps, 1);
     state = reduce(state, "FRAME", { result });
-    assert.equal(playbackSprites(state, true), state.sprites);
-    assert.equal(state.sprites[0].blocks, original[1].blocks);
+    assert.equal(playbackSprites(state), state.sprites);
   }
 });
 

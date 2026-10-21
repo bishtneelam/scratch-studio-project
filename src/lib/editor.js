@@ -104,9 +104,9 @@ function editSelected(state, patch) {
       ),
   };
 }
-// Flag playback is replayable; clicking blocks remains relative to the live scene.
-function playbackSprites(state, clickedStack = false) {
-  return clickedStack ? state.sprites : state.saved || state.sprites;
+// Both green-flag and movement-block playback continue from the live scene.
+function playbackSprites(state) {
+  return state.sprites;
 }
 function editorReducer(state, action) {
   switch (action.type) {
